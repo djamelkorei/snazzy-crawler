@@ -1,0 +1,28 @@
+{
+  "name": "snazzy-crawler",
+  "version": "1.0.0",
+  "description": "snazzy crawler web",
+  "main": "main.js",
+  "scripts": {
+    "start": "ndoe main.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/djamelkorei/snazzy-crawler.git"
+  },
+  "keywords": [
+    "web",
+    "crawler",
+    "bot"
+  ],
+  "author": "Djamel Korei",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/djamelkorei/snazzy-crawler/issues"
+  },
+  "homepage": "https://github.com/djamelkorei/snazzy-crawler#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
