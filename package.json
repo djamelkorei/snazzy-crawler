@@ -4,7 +4,7 @@
   "description": "snazzy crawler web",
   "main": "main.js",
   "scripts": {
-    "start": "ndoe main.js",
+    "start": "node main.js",
     "test": "jest crawler test.js"
   },
   "repository": {
