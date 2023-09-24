@@ -1,4 +1,6 @@
 const { JSDOM } = require('jsdom');
+const {Readability} = require("@mozilla/readability");
+const { convert } = require('html-to-text');
 
 async function parsePage(currentURL) {
     const response = await fetch(currentURL);
@@ -7,6 +9,25 @@ async function parsePage(currentURL) {
 }
 
 function getTextFromHtml(htmlBody) {
+    const dom = new JSDOM(htmlBody);
+    const htmlArticle = new Readability(dom.window.document).parse();
+    const options = {
+        wordwrap: 130,
+        formatters: {
+            // Create a formatter.
+            'fooBlockFormatter': function (elem, walk, builder, formatOptions) {
+                builder.openBlock({ leadingLineBreaks: formatOptions.leadingLineBreaks || 1 });
+                walk(elem.children, builder);
+                builder.addInline('!');
+                builder.closeBlock({ trailingLineBreaks: formatOptions.trailingLineBreaks || 1 });
+            }
+        },
+    };
+    return  convert(htmlArticle.content, options);
+}
+
+// deprecated
+function getTextFromHtmlOld(htmlBody) {
     const dom = new JSDOM(htmlBody);
     const body = dom.window.document.querySelector('body').innerHTML;
     return body
@@ -23,5 +44,6 @@ function getTextFromHtml(htmlBody) {
 
 module.exports = {
     getTextFromHtml,
+    getTextFromHtmlOld,
     parsePage
 }
