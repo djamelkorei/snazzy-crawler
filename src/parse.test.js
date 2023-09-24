@@ -1,7 +1,7 @@
-const {getTextFromHtml} = require("./parse");
+const {getTextFromHtmlOld} = require("./parse");
 const {test, expect} = require('@jest/globals');
 
-test('getTextFromHtml', () => {
+test('getTextFromHtmlOld', () => {
     const input = `
         <html lang="en">
         <body>
@@ -10,7 +10,7 @@ test('getTextFromHtml', () => {
         </body>
         </html> 
     `;
-    const actual = getTextFromHtml(input);
+    const actual = getTextFromHtmlOld(input);
     const expected = "Title Hello World!";
     expect(actual).toEqual(expected);
 });
