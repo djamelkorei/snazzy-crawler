@@ -4,7 +4,7 @@
   "description": "snazzy crawler web",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "nodemon main.js",
     "test": "jest crawler test.js"
   },
   "repository": {
@@ -29,8 +29,11 @@
   "dependencies": {
     "@mozilla/readability": "^0.4.4",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "html-to-text": "^9.0.5",
     "jsdom": "^22.1.0",
-    "openai": "^4.7.1"
+    "nodemon": "^3.0.1",
+    "openai": "^4.7.1",
+    "pg-promise": "^11.5.4"
   }
 }
