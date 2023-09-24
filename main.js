@@ -1,19 +1,23 @@
+const express = require('express')
+const {db} = require("./utils/db");
+const app = express();
+
 const {printReport} = require("./src/report");
 const {crawlPage} = require('./src/crawl');
 const {parsePage} = require("./src/parse");
 
 async function main() {
-    if(process.argv.length < 3) {
+    if (process.argv.length < 3) {
         console.log("no website provided")
         process.exit(1);
     }
 
-    if(process.argv.length < 4) {
+    if (process.argv.length < 4) {
         console.log("no starter provided")
         process.exit(1);
     }
 
-    if(process.argv.length > 4) {
+    if (process.argv.length > 4) {
         console.log("to many command line args")
         process.exit(1);
     }
@@ -21,14 +25,14 @@ async function main() {
 
     const type = process.argv[3];
 
-    if(!['crawl', 'parse'].includes(type)) {
+    if (!['crawl', 'parse'].includes(type)) {
         console.log("Unknown args type choose: ['crawl', 'parse']")
         process.exit(1);
     }
 
     const baseURL = process.argv[2];
 
-    if(type === 'crawl') {
+    if (type === 'crawl') {
         console.log(`starting crawl of ${baseURL}`);
         const pages = await crawlPage(baseURL, baseURL, {});
         printReport(pages);
@@ -39,4 +43,17 @@ async function main() {
     }
 }
 
-main();
+//main();
+
+
+app.get('/', (req, res) => {
+    db.many('select * from documents')
+        .then((data) => {
+            res.json(data)
+        })
+        .catch((error) => {
+            res.json({error : error})
+        })
+});
+
+app.listen('8000');
