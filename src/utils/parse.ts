@@ -1,14 +1,17 @@
+import {Observable} from "rxjs";
+
 const { JSDOM } = require('jsdom');
 const {Readability} = require("@mozilla/readability");
 const { convert } = require('html-to-text');
+import axios from "axios";
 
-async function parsePage(currentURL) {
-    const response = await fetch(currentURL);
-    const htmlBody = await response.text();
-    return getTextFromHtml(htmlBody);
-}
+// export function parsePage(currentURL): Observable<string> {
+//     const response = await axios(currentURL);
+//     const htmlBody = await response.data;
+//     return getTextFromHtml(htmlBody);
+// }
 
-function getTextFromHtml(htmlBody) {
+export function getTextFromHtml(htmlBody) {
     const dom = new JSDOM(htmlBody);
     const htmlArticle = new Readability(dom.window.document).parse();
     const options = {
@@ -27,7 +30,7 @@ function getTextFromHtml(htmlBody) {
 }
 
 // deprecated
-function getTextFromHtmlOld(htmlBody) {
+export function getTextFromHtmlOld(htmlBody) {
     const dom = new JSDOM(htmlBody);
     const body = dom.window.document.querySelector('body').innerHTML;
     return body
@@ -40,10 +43,4 @@ function getTextFromHtmlOld(htmlBody) {
         .replace(/<[^>]*>/ig, '')
         .replace('&nbsp;', ' ')
         .replace(/[^\S\r\n][^\S\r\n]+/ig, ' ').trim()
-}
-
-module.exports = {
-    getTextFromHtml,
-    getTextFromHtmlOld,
-    parsePage
 }
