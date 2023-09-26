@@ -8,6 +8,6 @@ export class AppController {
 
   @Get()
   getHello(): Observable<String>{
-    return this.appService.getHello();
+    return this.appService.getTextFromHtml();
   }
 }

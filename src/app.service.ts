@@ -9,7 +9,7 @@ export class AppService {
   constructor(private readonly httpService: HttpService) {
   }
 
-  getHello(): Observable<string> {
+  getTextFromHtml(): Observable<string> {
     return this.httpService.get('https://djamelkorei.com')
         .pipe(map(response => response.data))
         .pipe(map(body => getTextFromHtml(body)))
