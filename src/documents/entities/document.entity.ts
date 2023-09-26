@@ -12,7 +12,4 @@ export class Document {
     @Column()
     content: string;
 
-    @Column("int", {array: true})
-    embedding: number[];
-
 }
