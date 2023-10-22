@@ -1,4 +1,5 @@
 const { JSDOM } = require('jsdom');
+const {getTextFromHtml} = require("./parse");
 
 async function crawlPage(baseURL , currentURL, pages) {
 
@@ -9,18 +10,16 @@ async function crawlPage(baseURL , currentURL, pages) {
     }
 
     const normalizedCurrentURL = normalizeURL(currentURL);
-    if(pages[normalizedCurrentURL] > 0) {
-        pages[normalizedCurrentURL]++;
+    if(pages[normalizedCurrentURL]) {
         return pages
     }
 
-    pages[normalizedCurrentURL] = 1
     console.log(`actively crawling: ${currentURL}`)
 
     try {
 
         const response = await fetch(currentURL);
-        if(response.status > 399) {
+        if(response.status > 399 ) {
             console.log(`error in fetch with status code: ${response.status}, on page: ${currentURL}`)
             return pages
         }
@@ -32,23 +31,36 @@ async function crawlPage(baseURL , currentURL, pages) {
         }
 
         const htmlBody = await response.text();
+
+        pages[normalizedCurrentURL] = getTextFromHtml(htmlBody);
         const nextURLs= getURLsFromHTML(htmlBody, baseURL);
 
         for (const nextUrl of nextURLs) {
+            if(Object.keys(pages).length > 10) {
+                break;
+            }
+            if(filterUrl(nextUrl)) {
+                continue;
+            }
             pages = await crawlPage(baseURL, nextUrl, pages);
         }
 
     } catch (err) {
         console.log(`error in fetch: ${err.message}, on page: ${currentURL}`)
     }
-
     return pages;
+}
+
+function filterUrl(url) {
+    return ['.png', '.jpg', '.jfif', '.jpeg', '.svg', '.doc', '.docx', '.pdf', '.csv']
+        .some(fruit => url.includes(fruit))
 }
 
 function getURLsFromHTML(htmlBody, baseURL) {
     const urls = [];
     const dom = new JSDOM(htmlBody);
     const linkElements = dom.window.document.querySelectorAll('a');
+    console.log(linkElements);
     for(const linkElement of linkElements) {
         if(linkElement.href.slice(0, 1) === '/') {
             // relative
@@ -81,7 +93,5 @@ function normalizeURL(urlString) {
 }
 
 module.exports = {
-    normalizeURL,
-    getURLsFromHTML,
     crawlPage
 }; 
